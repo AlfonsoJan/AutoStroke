@@ -1,0 +1,2 @@
+# Comment
+MoveMouse 10 20
