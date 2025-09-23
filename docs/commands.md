@@ -2,6 +2,12 @@
 
 This document lists all available commands for ActionStroke macros, along with their arguments, types, and descriptions.
 
+## Table of Contents
+
+- [Commands](#command-syntax)
+- [MoveMouse](#movemouse)
+- [MoveMouseTo](#movemouseto)
+
 ---
 
 ## Command Syntax
