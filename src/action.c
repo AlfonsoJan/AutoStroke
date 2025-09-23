@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <string.h>
 #include <windows.h>
-#include <math.h>
 
 #include "action.h"
 #include "task.h"

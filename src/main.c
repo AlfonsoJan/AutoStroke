@@ -9,8 +9,8 @@
 void usage(const char *program) {
     fprintf(stderr, "Usage: %s <macro script> [OPTIONS...] \n", program);
     fprintf(stderr, "Options:\n");
-    fprintf(stderr, "   -h         print this help and exit\n");
-    fprintf(stderr, "   -commands  print out all the command\n");
+    fprintf(stderr, "   -h                  print this help and exit\n");
+    fprintf(stderr, "   -c | --commands     print out all the command\n");
 }
 
 int main(int argc, char **argv) {
@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
         if (strcmp(flag, "-h") == 0) {
             usage(program);
             return 1;
-        } else if (strcmp(flag, "-commands") == 0) {
+        } else if (strcmp(flag, "-c") == 0 || strcmp(flag, "--commands") == 0) {
             print_out_action_type_map();
             return 0;
         } else {
