@@ -17,3 +17,7 @@ int parse_long_strict(const char *tok, long *out) {
     *out = v;
     return 1;
 }
+
+double clamp01(double x) {
+    return x < 0 ? 0 : (x > 1 ? 1 : x);
+}

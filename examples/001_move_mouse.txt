@@ -1,2 +1,3 @@
 # Comment
 MoveMouse 10 20
+MoveMouseTo 20 800 1000

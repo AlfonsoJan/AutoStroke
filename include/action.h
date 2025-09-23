@@ -6,6 +6,7 @@
 
 typedef enum {
     MOVE_MOUSE = 0,
+    MOVE_MOUSE_TO,
 
     UNKNOWN_ACTION,
     TOTAL_ACTION
@@ -22,6 +23,7 @@ typedef struct {
 typedef int (*ActionFunc)(ActionString);
 
 int moveMouse(ActionString ac);
+int moveMouseTo(ActionString ac);
 
 typedef struct {
     const char *name;
@@ -31,11 +33,12 @@ typedef struct {
 } ActionTypeMap;
 
 static const ActionTypeMap actionMap[TOTAL_ACTION] = {
-    {"MoveMouse", MOVE_MOUSE, moveMouse, "Move the mouse to a given location on the main screen."},
+    {"MoveMouse", MOVE_MOUSE, moveMouse, "Set the mouse position to a given location on the main screen."},
+    {"MoveMouseTo", MOVE_MOUSE_TO, moveMouseTo, "Move the mouse to a given location from the current location on the main screen."},
     {"UNKNOWN_ACTION", UNKNOWN_ACTION, 0, ""},
 };
 
-static_assert(TOTAL_ACTION == 2, "update actionMap");
+static_assert(TOTAL_ACTION == 3, "update actionMap");
 
 const ActionTypeMap* getActionFromString(ActionType action);
 ActionType stringToActionType(const char *str);

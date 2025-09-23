@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
+#include <math.h>
 
 #include "action.h"
-
+#include "task.h"
 #include "utils.h"
 
 #define DELAYS_MS 300
@@ -14,12 +15,21 @@ int moveMouse(ActionString ac) {
         fprintf(stderr, "%s:%d:1: MoveMouse expects 2 integers\n", ac.filename, ac.line_no);
         return 1;
     }
-    INPUT in = {0};
-    in.type = INPUT_MOUSE;
-    in.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-    in.mi.dx = (65535 * x) / GetSystemMetrics(SM_CXSCREEN);
-    in.mi.dy = (65535 * y) / GetSystemMetrics(SM_CYSCREEN);
-    SendInput(1, &in, sizeof(INPUT));
+    moveMouseImpl(x, y);
+    Sleep(DELAYS_MS);
+    return 0;
+}
+
+int moveMouseTo(ActionString ac) {
+    long x, y, totalMs;
+    if (ac.argcount != 3 || !parse_long_strict(ac.args[0], &x) || !parse_long_strict(ac.args[1], &y) || !parse_long_strict(ac.args[2], &totalMs)) {
+        fprintf(stderr, "%s:%d:1: MoveMouseTo expects 3 integers\n", ac.filename, ac.line_no);
+        return 1;
+    }
+    if (moveMouseToImpl(x, y, totalMs) != 0) {
+        fprintf(stderr, "%s:%d:1: Something went wrong!\n", ac.filename, ac.line_no);
+        return 1;
+    }
     Sleep(DELAYS_MS);
     return 0;
 }
@@ -72,7 +82,14 @@ int run_actions(ActionString *actions, size_t action_count) {
 }
 
 void print_out_action_type_map(void) {
+    int max_len = 0;
     for (int i = 0; i < TOTAL_ACTION - 1; i++) {
-        printf("%s\n", actionMap[i].description);
+        int len = strlen(actionMap[i].name);
+        if (len > max_len) {
+            max_len = len;
+        }
+    }
+    for (int i = 0; i < TOTAL_ACTION - 1; i++) {
+        printf("%-*s - %s\n", max_len, actionMap[i].name, actionMap[i].description);
     }
 }

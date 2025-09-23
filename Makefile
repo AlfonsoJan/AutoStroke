@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iinclude
 LDFLAGS = -luser32 -lwinmm
 
-SRC = src/main.c src/action.c src/utils.c src/parse.c
+SRC = src/main.c src/action.c src/utils.c src/parse.c src/task.c
 OBJ = $(subst /,\,$(SRC:.c=.o))
 HDR = $(wildcard include/*.h)
 
