@@ -35,7 +35,7 @@ static void tokenize_line(char *line, char *out_tokens[], int *out_count) {
                 *out_count = ntok;
                 return;
             }
-            // comment start?
+            // comment start
             if (c == '#') {
                 *out_count = ntok;
                 return;
@@ -52,11 +52,11 @@ static void tokenize_line(char *line, char *out_tokens[], int *out_count) {
             // start token
             if (c == '"' || c == '\'') {
                 quote = c;
-                p++;                   // consume opening quote
-                out_tokens[ntok++] = w = p;       // token starts after quote
+                p++;
+                out_tokens[ntok++] = w = p;
                 state = S_QUOTED;
             } else {
-                out_tokens[ntok++] = w = p;       // token starts here
+                out_tokens[ntok++] = w = p;
                 state = S_TOKEN;
             }
             break;
@@ -162,7 +162,6 @@ int parse_macro_text(const char *macro_path, ActionString *out_actions, size_t *
     int line_no = 0;
     while (fgets(buf, (int)cap, fp)) {
         line_no++;
-        // lees door tot einde van (eventueel lange) regel
         while (!strchr(buf, '\n') && !feof(fp)) {
             size_t len = strlen(buf);
             cap *= 2;
