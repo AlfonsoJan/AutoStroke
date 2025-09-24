@@ -19,29 +19,37 @@ void usage(const char *program) {
 
 int main(int argc, char **argv) {
     const char *program = shift_args(argc, argv);
-    const char *macro_path = shift_args(argc, argv);
+    const char *macro_path = NULL;
     int wait_for_hotkey = 1;
 
-    if (macro_path == NULL) {
-        usage(program);
-        return 1;
-    }
-
     while (argc > 0) {
-        const char *flag = shift_args(argc, argv);
-        if (strcmp(flag, "-h") == 0) {
+        const char *arg = shift_args(argc, argv);
+        if (strcmp(arg, "-h") == 0) {
             usage(program);
-            return 1;
-        } else if (strcmp(flag, "-c") == 0 || strcmp(flag, "--commands") == 0) {
+            return 0;
+        } else if (strcmp(arg, "-c") == 0 || strcmp(arg, "--commands") == 0) {
             print_out_action_type_map();
             return 0;
-        } else if (strcmp(flag, "-i") == 0 || strcmp(flag, "--immediate") == 0) {
+        } else if (strcmp(arg, "-i") == 0 || strcmp(arg, "--immediate") == 0) {
             wait_for_hotkey = 0;
-        } else {
-            fprintf(stderr, "Unknown command: '%s'\n", flag);
+        } else if (arg[0] == '-') {
+            fprintf(stderr, "Unknown option: '%s'\n", arg);
             usage(program);
             return 1;
+        } else {
+            if (!macro_path) {
+                macro_path = arg;
+            } else {
+                fprintf(stderr, "Unexpected extra argument: '%s'\n", arg);
+                usage(program);
+                return 1;
+            }
         }
+    }
+
+    if (!macro_path) {
+        usage(program);
+        return 1;
     }
 
     ActionString actions[MAX_ACTIONS];
