@@ -5,7 +5,7 @@
 #include "task.h"
 #include "utils.h"
 
-#define DELAYS_MS 300
+#define DELAYS_MS 100
 
 int moveMouseAction(ActionString ac) {
     long x, y;

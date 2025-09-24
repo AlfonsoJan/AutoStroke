@@ -17,6 +17,45 @@ void usage(const char *program) {
     fprintf(stderr, "Default behavior is to arm and wait for Alt+F12, then run the macro.\n");
 }
 
+static HWND create_message_window(HINSTANCE hInst) {
+    WNDCLASSA wc = {0};
+    wc.lpfnWndProc   = DefWindowProcA;
+    wc.hInstance     = hInst;
+    wc.lpszClassName = "AutoStrokeTrayWnd";
+    RegisterClassA(&wc);
+    return CreateWindowExA(0, wc.lpszClassName, "AutoStrokeTrayWnd",
+                           0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hInst, NULL);
+}
+
+void notification(HWND hwnd, const char* popup_text) {
+    HICON hIcon = LoadIcon(NULL, IDI_APPLICATION);
+
+    NOTIFYICONDATAA nid = {0};
+    nid.cbSize = sizeof(nid);
+    nid.hWnd   = hwnd;
+    nid.uID    = 1;
+    nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
+    nid.uCallbackMessage = WM_APP + 1;
+    nid.hIcon  = hIcon;
+    lstrcpynA(nid.szTip, "AutoStroke", ARRAYSIZE(nid.szTip));
+
+    Shell_NotifyIconA(NIM_ADD, &nid);
+
+    nid.uVersion = NOTIFYICON_VERSION_4;
+    Shell_NotifyIconA(NIM_SETVERSION, &nid);
+
+    nid.uFlags = NIF_INFO;
+    lstrcpynA(nid.szInfoTitle, "Notification", ARRAYSIZE(nid.szInfoTitle));
+    lstrcpynA(nid.szInfo, popup_text, ARRAYSIZE(nid.szInfo));
+    nid.dwInfoFlags = NIIF_INFO | NIIF_NOSOUND;
+
+    Shell_NotifyIconA(NIM_MODIFY, &nid);
+
+    Sleep(5000);
+
+    Shell_NotifyIconA(NIM_DELETE, &nid);
+}
+
 int main(int argc, char **argv) {
     const char *program = shift_args(argc, argv);
     const char *macro_path = NULL;
@@ -52,6 +91,13 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    HINSTANCE hInst = GetModuleHandle(NULL);
+    HWND hwnd = create_message_window(hInst);
+    if (!hwnd) {
+        fprintf(stderr, "Failed to create message window for tray icon.\n");
+        return 1;
+    }
+
     ActionString actions[MAX_ACTIONS];
     size_t action_count = 0;
     if (parse_macro_text(macro_path, actions, &action_count) != 0) {
@@ -71,7 +117,7 @@ int main(int argc, char **argv) {
             return 1;
         }
 
-        printf("AutoStroke armed. Press Alt+F12 to start...\n");
+        notification(hwnd, "AutoStroke armed. Press Alt+F12 to start...");
         MSG msg;
         while (GetMessage(&msg, NULL, 0, 0) != 0) {
             if (msg.message == WM_HOTKEY && msg.wParam == 1) {
