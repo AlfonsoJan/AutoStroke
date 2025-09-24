@@ -12,16 +12,31 @@ HDR = $(wildcard include/*.h)
 TARGET  = autostroke
 EXE     = $(TARGET).exe
 
-.PHONY: all clean
+RC      = windres
+RCFLAGS = -O coff
+
+ICO     = assets/icon.ico
+RCFILE  = app.rc
+RES     = app.res
+
+.PHONY: all clean lint
 
 all: $(EXE)
 
-$(EXE): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LDFLAGS)
+$(EXE): $(OBJ) $(RES)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(RES) $(LDFLAGS)
+
+$(RCFILE): $(ICO)
+	@echo IDI_ICON1 ICON "$(ICO)" > $(RCFILE)
+
+$(RES): $(RCFILE)
+	$(RC) $(RCFLAGS) $(RCFILE) -o $(RES)
 
 clean:
 	@if exist "$(EXE)" del /q "$(EXE)"
 	@for %%f in ($(OBJ)) do if exist "%%f" del /q "%%f"
+	@if exist "$(RES)" del /q "$(RES)"
+	@if exist "$(RCFILE)" del /q "$(RCFILE)"
 
 lint:
 	@for %%f in ($(SRC) $(HDR)) do if exist "%%f" astyle --style=java --pad-oper --suffix=none --max-code-length=180 "%%f"

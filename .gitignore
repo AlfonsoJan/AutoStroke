@@ -1,3 +1,5 @@
 *.o
 autostroke.exe
 .vscode
+*.rc
+*.res
