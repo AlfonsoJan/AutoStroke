@@ -62,3 +62,8 @@ int moveMouseToImpl(long x, long y, long totalMs) {
 
     return moveMouseImpl(x, y);
 }
+
+int sleepImpl(long totalMs) {
+    Sleep(totalMs);
+    return 0;
+}

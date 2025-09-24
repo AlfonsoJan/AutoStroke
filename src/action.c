@@ -7,7 +7,7 @@
 
 #define DELAYS_MS 300
 
-int moveMouse(ActionString ac) {
+int moveMouseAction(ActionString ac) {
     long x, y;
     if (ac.argcount != 2 || !parse_long_strict(ac.args[0], &x) || !parse_long_strict(ac.args[1], &y)) {
         fprintf(stderr, "%s:%d:1: MoveMouse expects 2 integers\n", ac.filename, ac.line_no);
@@ -18,7 +18,7 @@ int moveMouse(ActionString ac) {
     return 0;
 }
 
-int moveMouseTo(ActionString ac) {
+int moveMouseToAction(ActionString ac) {
     long x, y, totalMs;
     if (ac.argcount != 3 || !parse_long_strict(ac.args[0], &x) || !parse_long_strict(ac.args[1], &y) || !parse_long_strict(ac.args[2], &totalMs)) {
         fprintf(stderr, "%s:%d:1: MoveMouseTo expects 3 integers\n", ac.filename, ac.line_no);
@@ -28,6 +28,17 @@ int moveMouseTo(ActionString ac) {
         fprintf(stderr, "%s:%d:1: Something went wrong!\n", ac.filename, ac.line_no);
         return 1;
     }
+    Sleep(DELAYS_MS);
+    return 0;
+}
+
+int sleepAction(ActionString ac) {
+    long totalMs;
+    if (ac.argcount != 1 || !parse_long_strict(ac.args[0], &totalMs)) {
+        fprintf(stderr, "%s:%d:1: Sleep expects 1 integer\n", ac.filename, ac.line_no);
+        return 1;
+    }
+    sleepImpl(totalMs);
     Sleep(DELAYS_MS);
     return 0;
 }

@@ -1,3 +1,5 @@
 # Comment
 MoveMouse 10 20
 MoveMouseTo 20 800 1000
+Sleep 400
+MoveMouseTo 800 20 1000

@@ -7,6 +7,7 @@ This document lists all available commands for ActionStroke macros, along with t
 - [Commands](#command-syntax)
 - [MoveMouse](#movemouse)
 - [MoveMouseTo](#movemouseto)
+- [Sleep](#sleep)
 
 ---
 
@@ -38,4 +39,15 @@ COMMAND_NAME arg1=value arg2=value ...
     x (int)  -> X cooridinate
     y (int)  -> Y coordinate
     ms (int) -> Time in ms to travel to the given x,y location
+```
+
+---
+
+### Sleep
+
+*Wait for n miliseconds.*
+
+```text
+    Sleep (ms)
+    ms (int) -> Time in ms to wait
 ```
